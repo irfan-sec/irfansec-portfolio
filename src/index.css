@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Cybersecurity Professional Theme */
+    --background: 222 84% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 84% 6%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 84% 6%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 194 97% 66%;
+    --primary-foreground: 222 84% 4%;
+
+    --secondary: 222 47% 11%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 142 76% 36%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 194 97% 66%;
+
+    --radius: 0.75rem;
+
+    /* Cybersecurity Color Palette */
+    --cyber-blue: 194 97% 66%;
+    --cyber-green: 142 76% 36%;
+    --cyber-teal: 175 92% 45%;
+    --matrix-green: 120 100% 50%;
+    --terminal-green: 100 100% 40%;
+    --warning-orange: 30 100% 60%;
+    --danger-red: 0 84% 60%;
+    --void-black: 222 84% 2%;
+    --deep-black: 222 84% 4%;
+    --cyber-gray: 215 28% 17%;
+    --light-gray: 215 20% 65%;
+    
+    /* Cybersecurity Gradients */
+    --gradient-cyber: linear-gradient(135deg, hsl(var(--cyber-blue)), hsl(var(--cyber-teal)));
+    --gradient-matrix: linear-gradient(90deg, hsl(var(--terminal-green)), hsl(var(--matrix-green)));
+    --gradient-void: linear-gradient(180deg, hsl(var(--void-black)), hsl(var(--deep-black)));
+    --gradient-hologram: linear-gradient(45deg, hsl(var(--cyber-blue) / 0.1), hsl(var(--cyber-green) / 0.1), hsl(var(--cyber-teal) / 0.1));
+    --gradient-terminal: conic-gradient(from 90deg, hsl(var(--terminal-green) / 0.2), hsl(var(--cyber-blue) / 0.2), hsl(var(--terminal-green) / 0.2));
+    
+    /* 3D Effects & Shadows */
+    --shadow-cyber: 0 0 20px hsl(var(--cyber-blue) / 0.3), 0 0 40px hsl(var(--cyber-blue) / 0.1);
+    --shadow-matrix: 0 0 20px hsl(var(--terminal-green) / 0.4), 0 0 40px hsl(var(--terminal-green) / 0.2);
+    --shadow-hologram: 0 8px 32px hsl(var(--cyber-blue) / 0.15), inset 0 0 40px hsl(var(--cyber-teal) / 0.1);
+    --shadow-deep: 0 25px 80px hsl(var(--void-black) / 0.8);
+    --shadow-floating: 0 12px 48px hsl(var(--void-black) / 0.6), 0 0 24px hsl(var(--cyber-blue) / 0.15);
+    
+    /* 3D Transforms */
+    --transform-3d: perspective(1000px);
+    --rotate-y: rotateY(15deg);
+    --rotate-x: rotateX(15deg);
+
+    --sidebar-background: 220 25% 10%;
+    --sidebar-foreground: 200 20% 95%;
+    --sidebar-primary: 193 95% 55%;
+    --sidebar-primary-foreground: 220 26% 8%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 200 20% 95%;
+    --sidebar-border: 220 20% 20%;
+    --sidebar-ring: 193 95% 55%;
+  }
+
+  .dark {
+    /* Next-Gen Dark Theme */
+    --background: 240 20% 3%;
+    --foreground: 300 20% 95%;
+    --card: 240 25% 6%;
+    --card-foreground: 300 20% 95%;
+    --popover: 240 25% 6%;
+    --popover-foreground: 300 20% 95%;
+    --primary: 280 100% 70%;
+    --primary-foreground: 240 20% 3%;
+    --secondary: 260 30% 12%;
+    --secondary-foreground: 300 20% 95%;
+    --muted: 260 25% 10%;
+    --muted-foreground: 300 10% 65%;
+    --accent: 320 90% 65%;
+    --accent-foreground: 240 20% 3%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 300 20% 95%;
+    --border: 260 25% 15%;
+    --input: 260 25% 8%;
+    --ring: 280 100% 70%;
+    --sidebar-background: 220 25% 10%;
+    --sidebar-foreground: 200 20% 95%;
+    --sidebar-primary: 193 95% 55%;
+    --sidebar-primary-foreground: 220 26% 8%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 200 20% 95%;
+    --sidebar-border: 220 20% 20%;
+    --sidebar-ring: 193 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: var(--gradient-void);
+    background-attachment: fixed;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Cybersecurity Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: hsl(var(--cyber-blue));
+  }
+
+  /* 3D Elements */
+  .cyber-3d {
+    transform-style: preserve-3d;
+    perspective: var(--transform-3d);
+  }
+
+  .vault-3d {
+    transform: var(--rotate-y) var(--rotate-x);
+    transition: transform 0.6s ease;
+    animation: vault-float 6s ease-in-out infinite;
+  }
+
+  .hologram {
+    background: var(--gradient-hologram);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--cyber-blue) / 0.3);
+    box-shadow: var(--shadow-hologram);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hologram::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--cyber-blue) / 0.2), transparent);
+    animation: scan-line 3s ease-in-out infinite;
+  }
+
+  .terminal-glow {
+    box-shadow: var(--shadow-cyber);
+    border: 1px solid hsl(var(--cyber-blue) / 0.5);
+    background: hsl(var(--deep-black) / 0.8);
+  }
+
+  .matrix-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--terminal-green) / 0.03) 2px,
+      hsl(var(--terminal-green) / 0.03) 4px
+    );
+    animation: matrix-scroll 20s linear infinite;
+  }
+
+  /* Animations */
+  @keyframes vault-float {
+    0%, 100% { transform: var(--rotate-y) var(--rotate-x) translateY(0px); }
+    50% { transform: var(--rotate-y) var(--rotate-x) translateY(-10px); }
+  }
+
+  @keyframes scan-line {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  @keyframes matrix-scroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50px); }
+  }
+
+  @keyframes cyber-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 5px hsl(var(--cyber-blue) / 0.3), 0 0 20px hsl(var(--cyber-blue) / 0.2); 
+    }
+    50% { 
+      box-shadow: 0 0 20px hsl(var(--cyber-blue) / 0.6), 0 0 40px hsl(var(--cyber-blue) / 0.4); 
+    }
+  }
+
+  @keyframes parallax-float {
+    0%, 100% { transform: translateY(0px) translateZ(0); }
+    50% { transform: translateY(-20px) translateZ(10px); }
+  }
+
+  /* Interactive Effects */
+  .cyber-hover:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-cyber);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .terminal-cursor::after {
+    content: '█';
+    color: hsl(var(--terminal-green));
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* Parallax Scroll Effects */
+  .parallax-layer {
+    transition: transform 0.1s ease-out;
+  }
+
+  /* Badge 3D Effects */
+  .badge-3d {
+    transform-style: preserve-3d;
+    transform: rotateX(20deg) rotateY(15deg);
+    transition: transform 0.3s ease;
+  }
+
+  .badge-3d:hover {
+    transform: rotateX(0deg) rotateY(0deg) scale(1.1);
+  }
+}
