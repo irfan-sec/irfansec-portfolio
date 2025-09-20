@@ -238,6 +238,8 @@ All colors MUST be HSL.
   /* Parallax Scroll Effects */
   .parallax-layer {
     transition: transform 0.1s ease-out;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   /* Badge 3D Effects */
@@ -245,9 +247,45 @@ All colors MUST be HSL.
     transform-style: preserve-3d;
     transform: rotateX(20deg) rotateY(15deg);
     transition: transform 0.3s ease;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .badge-3d:hover {
     transform: rotateX(0deg) rotateY(0deg) scale(1.1);
+  }
+
+  /* Performance optimizations */
+  .cyber-3d {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .vault-3d {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .hologram {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Reduce animation complexity on lower-end devices */
+  @media (prefers-reduced-motion: reduce) {
+    .matrix-bg,
+    .vault-3d,
+    .hologram,
+    .parallax-layer {
+      animation: none !important;
+      transform: none !important;
+    }
+    
+    .animate-spin,
+    .animate-ping,
+    .animate-pulse,
+    .animate-bounce {
+      animation: none !important;
+    }
   }
 }
