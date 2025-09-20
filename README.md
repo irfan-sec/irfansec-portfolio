@@ -1,7 +1,7 @@
 
 # 🔐 Irfan Ali - Cybersecurity Portfolio
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-0066FF?style=for-the-badge)](https://irfansec-portfolio.com)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-0066FF?style=for-the-badge)](https://irfansec.social)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/irfan-sec/irfansec-portfolio)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
