@@ -1,34 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Globe, Network, Zap } from 'lucide-react';
 
 const HologramGlobe = () => {
   const [rotation, setRotation] = useState(0);
   const [activeNodes, setActiveNodes] = useState<number[]>([]);
+  const rotationAnimationRef = useRef<number>(0);
+  const nodeTimeoutRef = useRef<NodeJS.Timeout>();
+  const lastFrameTimeRef = useRef(0);
 
-  useEffect(() => {
-    const rotationInterval = setInterval(() => {
-      setRotation(prev => (prev + 1) % 360);
-    }, 100);
-
-    const nodeInterval = setInterval(() => {
-      setActiveNodes(prev => {
-        const newNodes = [...prev];
-        const randomNode = Math.floor(Math.random() * 8);
-        if (newNodes.includes(randomNode)) {
-          return newNodes.filter(n => n !== randomNode);
-        } else {
-          return [...newNodes, randomNode].slice(-3); // Keep max 3 active nodes
-        }
-      });
-    }, 800);
-
-    return () => {
-      clearInterval(rotationInterval);
-      clearInterval(nodeInterval);
-    };
-  }, []);
-
-  const nodePositions = [
+  // Memoize node positions to avoid recalculation
+  const nodePositions = useMemo(() => [
     { x: 50, y: 20, z: 0 },
     { x: 80, y: 40, z: 30 },
     { x: 20, y: 60, z: -20 },
@@ -37,7 +18,85 @@ const HologramGlobe = () => {
     { x: 90, y: 65, z: 20 },
     { x: 15, y: 80, z: 10 },
     { x: 60, y: 25, z: -40 },
-  ];
+  ], []);
+
+  // Memoize connection lines calculation
+  const connectionLines = useMemo(() => {
+    const lines: Array<{
+      key: string;
+      length: number;
+      angle: number;
+      x: number;
+      y: number;
+    }> = [];
+
+    activeNodes.forEach((nodeIndex, i) => {
+      activeNodes.slice(i + 1).forEach((otherNodeIndex) => {
+        const node1 = nodePositions[nodeIndex];
+        const node2 = nodePositions[otherNodeIndex];
+        const length = Math.sqrt(
+          Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2)
+        );
+        const angle = Math.atan2(node2.y - node1.y, node2.x - node1.x) * 180 / Math.PI;
+        
+        lines.push({
+          key: `${nodeIndex}-${otherNodeIndex}`,
+          length: length * 0.8,
+          angle,
+          x: node1.x,
+          y: node1.y,
+        });
+      });
+    });
+
+    return lines;
+  }, [activeNodes, nodePositions]);
+
+  const updateActiveNodes = useCallback(() => {
+    setActiveNodes(prev => {
+      const newNodes = [...prev];
+      const randomNode = Math.floor(Math.random() * 8);
+      if (newNodes.includes(randomNode)) {
+        return newNodes.filter(n => n !== randomNode);
+      } else {
+        return [...newNodes, randomNode].slice(-3); // Keep max 3 active nodes
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const animate = (currentTime: number) => {
+      // Limit to 30fps for smooth but not excessive updates
+      if (currentTime - lastFrameTimeRef.current < 33) {
+        rotationAnimationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTimeRef.current = currentTime;
+      
+      setRotation(prev => (prev + 0.5) % 360);
+      rotationAnimationRef.current = requestAnimationFrame(animate);
+    };
+
+    rotationAnimationRef.current = requestAnimationFrame(animate);
+
+    // Setup node update interval
+    const scheduleNodeUpdate = () => {
+      nodeTimeoutRef.current = setTimeout(() => {
+        updateActiveNodes();
+        scheduleNodeUpdate();
+      }, 800);
+    };
+    scheduleNodeUpdate();
+
+    return () => {
+      if (rotationAnimationRef.current) {
+        cancelAnimationFrame(rotationAnimationRef.current);
+      }
+      if (nodeTimeoutRef.current) {
+        clearTimeout(nodeTimeoutRef.current);
+      }
+    };
+  }, [updateActiveNodes]);
 
   return (
     <div className="relative w-64 h-64 mx-auto">
@@ -46,7 +105,11 @@ const HologramGlobe = () => {
         {/* Globe base */}
         <div 
           className="absolute inset-4 rounded-full border-2 border-cyber-teal/40 bg-gradient-to-br from-cyber-blue/10 to-cyber-teal/10"
-          style={{ transform: `rotateY(${rotation}deg)` }}
+          style={{ 
+            transform: `rotateY(${rotation}deg)`,
+            willChange: 'transform',
+            backfaceVisibility: 'hidden'
+          }}
         >
           {/* Globe icon in center */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -75,29 +138,19 @@ const HologramGlobe = () => {
           ))}
 
           {/* Connection lines */}
-          {activeNodes.map((nodeIndex, i) => (
-            activeNodes.slice(i + 1).map((otherNodeIndex, j) => {
-              const node1 = nodePositions[nodeIndex];
-              const node2 = nodePositions[otherNodeIndex];
-              const length = Math.sqrt(
-                Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2)
-              );
-              const angle = Math.atan2(node2.y - node1.y, node2.x - node1.x) * 180 / Math.PI;
-              
-              return (
-                <div
-                  key={`${nodeIndex}-${otherNodeIndex}`}
-                  className="absolute h-0.5 bg-gradient-to-r from-cyber-green via-cyber-teal to-cyber-green opacity-60"
-                  style={{
-                    left: `${node1.x}%`,
-                    top: `${node1.y}%`,
-                    width: `${length * 0.8}%`,
-                    transform: `rotate(${angle}deg)`,
-                    transformOrigin: '0 50%',
-                  }}
-                ></div>
-              );
-            })
+          {connectionLines.map((line) => (
+            <div
+              key={line.key}
+              className="absolute h-0.5 bg-gradient-to-r from-cyber-green via-cyber-teal to-cyber-green opacity-60"
+              style={{
+                left: `${line.x}%`,
+                top: `${line.y}%`,
+                width: `${line.length}%`,
+                transform: `rotate(${line.angle}deg)`,
+                transformOrigin: '0 50%',
+                willChange: 'transform',
+              }}
+            ></div>
           ))}
         </div>
 

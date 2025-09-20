@@ -1,28 +1,48 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Lock, Shield, Key } from 'lucide-react';
 
 const VaultAnimation = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [rotationY, setRotationY] = useState(0);
+  const animationIdRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRotationY(prev => (prev + 1) % 360);
-    }, 50);
+    const animate = (currentTime: number) => {
+      // Limit to 60fps and update every 2 frames for smoother but less frequent updates
+      if (currentTime - lastFrameTimeRef.current < 32) {
+        animationIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTimeRef.current = currentTime;
+      
+      setRotationY(prev => (prev + 0.5) % 360);
+      animationIdRef.current = requestAnimationFrame(animate);
+    };
 
-    return () => clearInterval(interval);
+    animationIdRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+    };
   }, []);
 
-  const toggleVault = () => {
-    setIsUnlocked(!isUnlocked);
-  };
+  const toggleVault = useCallback(() => {
+    setIsUnlocked(prev => !prev);
+  }, []);
 
   return (
     <div className="cyber-3d relative w-48 h-48 mx-auto cursor-pointer" onClick={toggleVault}>
       {/* Main vault container */}
       <div 
         className="vault-3d relative w-full h-full"
-        style={{ transform: `rotateY(${rotationY}deg) rotateX(15deg)` }}
+        style={{ 
+          transform: `rotateY(${rotationY}deg) rotateX(15deg)`,
+          willChange: 'transform',
+          backfaceVisibility: 'hidden'
+        }}
       >
         {/* Vault body */}
         <div className="absolute inset-0 bg-gradient-to-br from-cyber-gray to-cyber-deep rounded-2xl border border-cyber-blue/30">
