@@ -38,7 +38,7 @@ const Contact = () => {
       icon: Mail,
       label: "Email",
       value: "irfan.ali@cybersec.com",
-      action: () => window.open("mailto:irfan.ali@cybersec.com")
+      action: () => window.open("mailto:ceoirfan@cyberlearn.systems")
     },
     {
       icon: Github,
@@ -50,7 +50,7 @@ const Contact = () => {
       icon: Linkedin,
       label: "LinkedIn",
       value: "linkedin.com/in/irfan-ali",
-      action: () => window.open("https://linkedin.com/in/irfan-ali", "_blank")
+      action: () => window.open("https://linkedin.com/in/irfan-security", "_blank")
     },
     {
       icon: MapPin,
