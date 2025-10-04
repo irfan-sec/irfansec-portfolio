@@ -32,7 +32,7 @@ const Footer = () => {
                 variant="ghost" 
                 size="icon"
                 className="hover:bg-primary/20 hover:text-primary"
-                onClick={() => window.open("https://linkedin.com/in/irfan-ali", "_blank")}
+                onClick={() => window.open("https://linkedin.com/in/irfan-security", "_blank")}
               >
                 <Linkedin className="w-5 h-5" />
               </Button>
@@ -40,7 +40,7 @@ const Footer = () => {
                 variant="ghost" 
                 size="icon"
                 className="hover:bg-primary/20 hover:text-primary"
-                onClick={() => window.open("mailto:irfan.ali@cybersec.com")}
+                onClick={() => window.open("mailto:ceoirfan@cyberlearn.systems")}
               >
                 <Mail className="w-5 h-5" />
               </Button>
